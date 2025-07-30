@@ -7,8 +7,6 @@
 // tartget:  xxx
 //
 
-import 'dart:async';
-
 import 'package:city_pickers/modal/base_citys.dart';
 import 'package:city_pickers/modal/point.dart';
 import 'package:city_pickers/modal/result.dart';
@@ -98,7 +96,7 @@ class _FullPageState extends State<FullPage> {
     }
   }
 
-  Future<bool> back() {
+  bool back() {
     HistoryPageInfo? last = _history.length > 0 ? _history.last : null;
     if (last != null && mounted) {
       this.setState(() {
@@ -106,9 +104,9 @@ class _FullPageState extends State<FullPage> {
         itemList = last.itemList;
       });
       _history.removeLast();
-      return Future<bool>.value(false);
+      return true;
     }
-    return Future<bool>.value(true);
+    return false;
   }
 
   void _initLocation(String? locationCode) {
@@ -188,10 +186,7 @@ class _FullPageState extends State<FullPage> {
   }
 
   Point? _getTargetChildFirst(Point target) {
-    if (target == null) {
-      return null;
-    }
-    if (target.children != null && target.children.isNotEmpty) {
+    if (target.children.isNotEmpty) {
       return target.children.first;
     }
     return null;
@@ -317,11 +312,20 @@ class _FullPageState extends State<FullPage> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    return WillPopScope(
-      onWillPop: back,
+    final theme = Theme.of(context);
+    return PopScope(
+      onPopInvokedWithResult: (didPop,_){
+        if(didPop){
+          return;
+        }
+        if(back()){
+          return;
+        }
+        Navigator.of(context).pop(_buildResult());
+      },
+      canPop: false,
       child: Scaffold(
-        backgroundColor: theme.colorScheme.background,
+        backgroundColor: theme.colorScheme.surface,
         appBar: AppBar(
           title: _buildHead(),
         ),

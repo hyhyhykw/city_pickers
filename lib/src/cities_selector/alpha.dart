@@ -76,7 +76,6 @@ class Alpha extends StatefulWidget {
 
   Alpha(
       {
-
       /// 字母列表的高度大小与字体大小
       this.alphaFontSize = 14,
       this.alphaPadding = const EdgeInsets.symmetric(horizontal: 4.0),
@@ -148,19 +147,15 @@ class AlphaState extends State<Alpha> {
     this.setState(() {
       isTouched = true;
     });
-    if (tag != null) {
-      _onAlphaChange(tag);
-    }
+    _onAlphaChange(tag);
 
-    if (widget.onTouchStart != null && tag != null) {
+    if (widget.onTouchStart != null) {
       widget.onTouchStart!();
     }
   }
 
   _touchMoveEvent(String tag) {
-    if (tag != null) {
-      _onAlphaChange(tag);
-    }
+    _onAlphaChange(tag);
     if (widget.onTouchMove != null) {
       widget.onTouchMove!();
     }
